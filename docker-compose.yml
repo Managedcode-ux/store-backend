@@ -1,0 +1,25 @@
+name: Store-Backend
+services:
+  django-backend-service:
+    image: django-storebackend-image:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    mem_limit: 512m
+    cpus: "1"
+    depends_on:
+      - mongo-db-service
+  
+  mongo-db-service:
+    image: mongodb/mongodb-community-server:latest
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
+    ports:
+      - 27018:27017
